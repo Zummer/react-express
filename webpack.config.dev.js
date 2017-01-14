@@ -1,17 +1,35 @@
-import path from 'path';
+import path from 'path'
+import webpack from 'webpack';
 
 export default {
-  entry: path.join(__dirname, '/client/index.js'),
+  devtool: 'eval-source-map',
+  entry: [
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client',
+    path.join(__dirname, '/client/index.js')
+  ],
   output: {
-    path: '/'
+    path: '/',
+    publicPath: '/'
   },
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+  ],
   module: {
     loaders: [
       {
         test: /\.js$/,
-        include: path.join(__dirname, 'client'),
-        loaders: [ 'babel' ]
-      }
+        include: [
+          path.join(__dirname, 'client'),
+          path.join(__dirname, 'server/shared')
+        ],
+        loaders: [ 'babel'  ]
+      },
+      { test: /\.json$/, loader: 'json'  }
     ]
+  },
+  resolve: {
+    extentions: [ '', '.js'  ]
   }
 }
