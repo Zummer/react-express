@@ -1,5 +1,8 @@
 import React from 'react';
 
-export default () =>
-  <div>Hello, 2 Greetings!</div>
+const Greetings = () =>
+  <div className="jumbotron">
+    <h1>Hello, 3 Greetings!</h1>
+  </div>
   ;
+export default Greetings;

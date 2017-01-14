@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import Greetings from './Greetings';
+import NavigationBar from './NavigationBar';
 
-export default () => {
+const App = ({children}) => {
   return (
     <div>
-      <Greetings />
+      <div className="container">
+        <NavigationBar />
+        {children}
+      </div>
     </div>
   );
 }
+
+export default App;
