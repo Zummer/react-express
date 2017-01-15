@@ -1,15 +1,17 @@
-import { CALL_API, Schemas  } from '../middleware/api'
+import {CALL_API} from '../middleware/api'
 
-export const SIGNUP_REQUEST = 'SIGNUP_REQUEST'
-export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'
-export const SIGNUP_FAILURE = 'SIGNUP_FAILURE'
+import {
+  SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILURE
+} from '../constants';
 
 const fetchSignup = userData => ({
   [CALL_API]: {
     types: [SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE],
-    endpoint: 'signup',
+    endpoint: 'users',
     method: 'POST',
-    data: userData
+    payload: userData
   }
 
 });

@@ -1,6 +1,6 @@
-const API_ROOT = '/';
+const API_ROOT = 'api/';
 
-const callApi = (endpoint, method, data) => {
+const callApi = (endpoint, method, payload) => {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
 
   let requestOptions = {
@@ -10,9 +10,9 @@ const callApi = (endpoint, method, data) => {
     }
   };
 
-  if (data) {
+  if (payload) {
     requestOptions.headers['Content-Type'] = 'application/json';
-    requestOptions.body = JSON.stringify(data);
+    requestOptions.body = JSON.stringify(payload);
   }
 
   return fetch(fullUrl, requestOptions)
@@ -47,7 +47,7 @@ const api = store => next => action => {
   }
 
   let { endpoint  } = callAPI;
-  const { data, method, types  } = callAPI;
+  const { payload, method, types  } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -68,8 +68,8 @@ const api = store => next => action => {
 
   }
 
-  const actionWith = data => {
-    const finalAction = Object.assign({}, action, data);
+  const actionWith = payload => {
+    const finalAction = Object.assign({}, action, payload);
     delete finalAction[CALL_API];
     return finalAction;
 
@@ -80,16 +80,17 @@ const api = store => next => action => {
     type: requestType
   }));
 
-  return callApi(endpoint, method, data)
+  return callApi(endpoint, method, payload)
     .then(
       response => next(actionWith({
-        response,
-        type: successType
+        type: successType,
+        payload: response
 
       })),
       error => next(actionWith({
         type: failureType,
-        error: error.message || 'Something bad happened'
+        error: error.message || 'Something bad happened',
+        payload: error
 
       }))
 
