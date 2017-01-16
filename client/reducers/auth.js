@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNUP_REQUEST:
       return {
-        ...state,
+        errors: {}, 
         isFetching: true
       }
     case SIGNUP_SUCCESS:
@@ -23,9 +23,8 @@ export default (state = initialState, action) => {
       }
     case SIGNUP_FAILURE:
       return {
-        ...state,
-        isFetching: false,
-        errors: action.payload
+        errors: action.payload,
+        isFetching: false
       }
     default:
       return state;

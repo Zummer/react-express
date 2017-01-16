@@ -1,29 +1,62 @@
 import React from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
+import validateInput from '../../../server/shared/validations/signup';
+import TextFieldGroup from '../common/TextFieldGroup';
+import classNames from 'classnames';
 
 class SignupForm extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirm: '',
-      timezone: ''
+      errors: {},
+      data:{
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        timezone: ''
+      }
     }
   }
 
   onChange(e){
     const {name, value} = e.target;
+    const {errors} = this.state;
+    delete errors[name];
+
     this.setState({
-      [name]: value
-    })
+      errors,
+      data: {
+        ...this.state.data,
+        [name]: value
+      }
+    });
+  }
+
+  isValid(){
+    const {errors, isValid} = validateInput(this.state.data);
+
+    if(!isValid) {
+      this.setState({errors});
+    }
+
+    return isValid;
   }
 
   onSubmit(e){
     e.preventDefault();
-    this.props.userSignupRequest(this.state); 
+
+    if (this.isValid()){
+      this.props.userSignupRequest(this.state.data);
+
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      errors: nextProps.errors
+    })
   }
 
   render(){
@@ -31,68 +64,71 @@ class SignupForm extends React.Component {
       <option key={val} value={val}>{key}</option>
     );
 
+    const {errors, data} = this.state;
+    const {isFetching} = this.props;
+
     return (
       <form onSubmit={this.onSubmit.bind(this)}>
         <h1>Присоединяйтесь!</h1>
-        <div className="form-group">
-          <label className="control-label">Username</label>
-          <input
-            value={this.state.username}
-            onChange={this.onChange.bind(this)}
-            className="form-control"
-            name="username"
-            type="text"
-          />
-        </div>
-        <div className="form-group">
-          <label className="control-label">Email</label>
-          <input
-            value={this.state.email}
-            onChange={this.onChange.bind(this)}
-            className="form-control"
-            name="email"
-            type="text"
-          />
-        </div>
-        <div className="form-group">
-          <label className="control-label">Password</label>
-          <input
-            value={this.state.password}
-            onChange={this.onChange.bind(this)}
-            className="form-control"
-            name="password"
-            type="text"
-          />
-        </div>
-        <div className="form-group">
-          <label className="control-label">Password Confirmation</label>
-          <input
-            value={this.state.passwordConfirm}
-            onChange={this.onChange.bind(this)}
-            className="form-control"
-            name="passwordConfirm"
-            type="text"
-          />
-        </div>
-        <div className="form-group">
-          <label className="control-label">Timezone</label>
-          <select
-            value={this.state.timezone}
-            onChange={this.onChange.bind(this)}
-            className="form-control"
-            name="timezone"
-            type="text"
-          >
-            <option value="" disabled>Выберите свой часовой пояс</option>
-            {options}
-          </select>
-        </div>
-        <div className="form-group">
-          <button className="btn btn-primary btn-lg">
-            Sign up
-          </button>
-        </div>
-      </form>
+
+        <TextFieldGroup
+          label="Username"
+          field="username"
+          onChange={this.onChange.bind(this)}
+          value={data.username}
+          error={errors.username}
+        />
+
+        <TextFieldGroup
+          label="Email"
+          field="email"
+          onChange={this.onChange.bind(this)}
+          value={data.email}
+          error={errors.email}
+        />
+
+      <TextFieldGroup
+        label="Password"
+        field="password"
+        onChange={this.onChange.bind(this)}
+        value={data.password}
+        error={errors.password}
+      />
+
+    <TextFieldGroup
+      label="Password confirmation"
+      field="passwordConfirm"
+      onChange={this.onChange.bind(this)}
+      value={data.passwordConfirm}
+      error={errors.passwordConfirm}
+    />
+
+  <div className={
+    classNames("form-group", {
+      "has-error": errors.timezone
+    }
+  )}>
+    <label className="control-label">Timezone</label>
+    <select
+      value={this.state.data.timezone}
+      onChange={this.onChange.bind(this)}
+      className="form-control"
+      name="timezone"
+      type="text"
+    >
+      <option value="" disabled>Выберите свой часовой пояс</option>
+      {options}
+    </select>
+  </div>
+  <div className="form-group">
+    <button
+      className="btn btn-primary btn-lg"
+      disabled={isFetching}
+    >
+      Sign up
+    </button>
+  </div>
+</form>
     );
   }
 }
