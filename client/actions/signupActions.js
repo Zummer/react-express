@@ -1,5 +1,6 @@
 import {CALL_API} from '../middleware/api';
 import {browserHistory} from 'react-router';
+import {addFlashMessage} from './flashMessages';
 
 import {
   SIGNUP_REQUEST,
@@ -18,7 +19,11 @@ const fetchSignup = userData => ({
 });
 
 export const userSignupRequest = userData => (dispatch, getState) =>
-    dispatch(fetchSignup(userData))
-        .then(()=>{
-          browserHistory.push('/');
-        });
+  dispatch(fetchSignup(userData))
+    .then(()=>{
+      dispatch(addFlashMessage({
+        type: 'success',
+        text: 'You signed succesfully. Welcome!'
+      }));
+      browserHistory.push('/');
+    });

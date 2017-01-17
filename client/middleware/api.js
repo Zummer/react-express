@@ -35,10 +35,6 @@ export const CALL_API = Symbol('Call API');
 
 const api = store => next => action => {
 
-  if(!action) {
-    return;
-  }
-
   const callAPI = action[CALL_API];
 
   if (typeof callAPI === 'undefined') {
