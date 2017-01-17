@@ -48,8 +48,7 @@ class SignupForm extends React.Component {
     e.preventDefault();
 
     if (this.isValid()){
-      this.props.userSignupRequest(this.state.data);
-
+      this.props.userSignupRequest(this.state.data)
     }
   }
 

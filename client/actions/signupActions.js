@@ -1,4 +1,5 @@
-import {CALL_API} from '../middleware/api'
+import {CALL_API} from '../middleware/api';
+import {browserHistory} from 'react-router';
 
 import {
   SIGNUP_REQUEST,
@@ -16,8 +17,8 @@ const fetchSignup = userData => ({
 
 });
 
-export const userSignupRequest = userData =>
-  (dispatch, getState) =>
-    dispatch(fetchSignup(userData));
-
-
+export const userSignupRequest = userData => (dispatch, getState) =>
+    dispatch(fetchSignup(userData))
+        .then(()=>{
+          browserHistory.push('/');
+        });
