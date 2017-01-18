@@ -1,3 +1,13 @@
+import {ADD_FLASH_MESSAGE} from '../constants';
+
 export default (state = [], action = {}) => {
-  return state;
+  switch(action.type) {
+    case ADD_FLASH_MESSAGE: 
+      return [
+        ...state, 
+        action.payload
+      ];    
+    default:
+      return state;
+  }
 }
