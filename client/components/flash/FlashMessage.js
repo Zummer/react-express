@@ -3,25 +3,32 @@ import classNames from 'classnames';
 
 const FlashMessage = ({
   message: {
-    id, 
-    type, 
-    text 
-  }
+    id,
+    type,
+    text
+  },
+  onClick
 }) => {
   return (
     <div className={
       classNames('alert', {
-      'alert-success': type === 'success',
-      'alert-danger': type === 'error'
+        'alert-success': type === 'success',
+        'alert-danger': type === 'error'
       })
     }>
-      {text}
-    </div>
+    <button
+      className="close"
+      onClick={onClick}>
+    <span>&times;</span>
+    </button>
+    {text}
+  </div>
   )
 }
 
 FlashMessage.propTypes = {
-  message: React.PropTypes.object.isRequired
+  message: React.PropTypes.object.isRequired,
+  onClick: React.PropTypes.func.isRequired
 }
 
 export default FlashMessage;
