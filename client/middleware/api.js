@@ -1,7 +1,13 @@
+//import fetch from 'isomorphic-fetch'
+
 const API_ROOT = 'api/';
 
-const callApi = (endpoint, method, payload) => {
-  const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
+const callApi = (endpoint, method, payload, testUrl) => {
+  let fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
+
+  if (testUrl) {
+    fullUrl = testUrl + '/' + fullUrl;
+  }
 
   let requestOptions = {
     method,
@@ -16,17 +22,12 @@ const callApi = (endpoint, method, payload) => {
   }
 
   return fetch(fullUrl, requestOptions)
-    .then(response =>
-      response.json()
+    .then(response => response.json()
       .then(json => {
         if (!response.ok) {
           return Promise.reject(json)
-
         }
-
-        console.log('callApi OK');
         return json;
-
       })
     )
 }
@@ -43,7 +44,7 @@ const api = store => next => action => {
   }
 
   let { endpoint  } = callAPI;
-  const { payload, method, types  } = callAPI;
+  const { payload, method, types, testUrl } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -76,7 +77,7 @@ const api = store => next => action => {
     type: requestType
   }));
 
-  return callApi(endpoint, method, payload)
+  return callApi(endpoint, method, payload, testUrl)
     .then(
       response => next(actionWith({
         type: successType,

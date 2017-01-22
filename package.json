@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --watch server server --exec babel-node",
     "server": "nodemon --watch server --exec babel-node -- server",
-    "test": "mocha --compilers js:babel-register",
+    "test": "mocha --compilers js:babel-register --recursive",
     "jest": "jest"
   },
   "author": "",
@@ -35,15 +35,18 @@
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.2",
     "classnames": "^2.2.5",
+    "expect": "^1.20.2",
     "express": "^4.14.0",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
+    "nock": "^9.0.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
+    "redux-mock-store": "^1.2.1",
     "redux-thunk": "^2.1.0",
     "shortid": "^2.2.6",
     "validator": "^6.2.1"
