@@ -33,7 +33,7 @@ const callApi = (endpoint, method, payload, testUrl) => {
 
 export const CALL_API = Symbol('Call API');
 
-const api = store => next => action => {
+const api = store => next => async action => {
 
   const callAPI = action[CALL_API];
 
@@ -76,21 +76,23 @@ const api = store => next => action => {
     type: requestType
   }));
 
-  return callApi(endpoint, method, payload, testUrl)
-    .then(
-      response => next(actionWith({
-        type: successType,
-        payload: response
+  try {
+    const response = await callApi(endpoint, method, payload, testUrl)
+    next(actionWith({
+      type: successType,
+      payload: response
 
-      })),
-      error => next(actionWith({
-        type: failureType,
-        error: error.message || 'Something bad happened',
-        payload: error
+    }))
 
-      }))
+  } catch (error) {
+    next(actionWith({
+      type: failureType,
+      error: error.message || 'Something bad happened',
+      payload: error
 
-    )
+    }))
+
+  }
 
 }
 

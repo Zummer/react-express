@@ -5,6 +5,7 @@ import validateInput from '../../../server/shared/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
 import classNames from 'classnames';
 import shortid from 'shortid';
+import {browserHistory} from 'react-router';
 
 class SignupForm extends React.Component {
   constructor(props){

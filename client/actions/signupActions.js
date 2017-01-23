@@ -1,7 +1,4 @@
 import {CALL_API} from '../middleware/api';
-import {browserHistory} from 'react-router';
-import {addFlashMessage} from './flashMessages';
-import shortid from 'shortid';
 
 import {
   SIGNUP_REQUEST,
