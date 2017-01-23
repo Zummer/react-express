@@ -27,26 +27,23 @@ describe('async actions', () => {
     const testUrl = 'http://any.com';
 
     nock(testUrl)
-      .log(console.log)
       .post('/api/users')
       .reply(200, { success: true } )
 
     const expectedActions = [
       {type: types.SIGNUP_REQUEST},
-      {type: types.SIGNUP_SUCCESS},
-      {type: types.ADD_FLASH_MESSAGE}
+      {type: types.SIGNUP_SUCCESS, payload: {success:true}}
     ]
 
     const store = mockStore({
-      isFetching: false,
-      errors: {}
+      //isFetching: false,
+      //errors: {}
     });
 
     store.dispatch(actions.userSignupRequest(newUser, testUrl))
       .then(() => { // return of async actions
-        store.getActions().map((action, i) => {
-          expect(action.type).toEqual(expectedActions[i].type)
-        })
+        expect(store.getActions()).toEqual(expectedActions);
+        
       })
   });
 

@@ -21,12 +21,5 @@ export const fetchSignup = (userData, testUrl) => ({
 });
 
 export const userSignupRequest = (userData, testUrl) => (dispatch, getState) =>
-  dispatch(fetchSignup(userData, testUrl))
-    .then(()=>{
-      dispatch(addFlashMessage({
-        id: shortid(),
-        type: 'success',
-        text: 'You signed succesfully. Welcome!'
-      }));
-      //browserHistory.push('/');
-    });
+  dispatch(fetchSignup(userData, testUrl));
+    

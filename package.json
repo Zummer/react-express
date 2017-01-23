@@ -7,7 +7,7 @@
     "start": "nodemon --watch server server --exec babel-node",
     "server": "nodemon --watch server --exec babel-node -- server",
     "test": "mocha --compilers js:babel-register --recursive",
-    "jest": "jest"
+    "jest": "jest --watch"
   },
   "author": "",
   "license": "ISC",

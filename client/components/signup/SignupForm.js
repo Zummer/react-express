@@ -4,6 +4,7 @@ import map from 'lodash/map';
 import validateInput from '../../../server/shared/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
 import classNames from 'classnames';
+import shortid from 'shortid';
 
 class SignupForm extends React.Component {
   constructor(props){
@@ -49,6 +50,14 @@ class SignupForm extends React.Component {
 
     if (this.isValid()){
       this.props.userSignupRequest(this.state.data)
+        .then(()=>{
+          this.props.addFlashMessage({
+            id: shortid(),
+            type: 'success',
+            text: 'You signed succesfully. Welcome!'
+          });
+          browserHistory.push('/');
+        });
     }
   }
 
@@ -78,56 +87,56 @@ class SignupForm extends React.Component {
           error={errors.username}
         />
 
-        <TextFieldGroup
-          label="Email"
-          field="email"
-          onChange={this.onChange.bind(this)}
-          value={data.email}
-          error={errors.email}
-        />
-
       <TextFieldGroup
-        label="Password"
-        field="password"
+        label="Email"
+        field="email"
         onChange={this.onChange.bind(this)}
-        value={data.password}
-        error={errors.password}
+        value={data.email}
+        error={errors.email}
       />
 
     <TextFieldGroup
-      label="Password confirmation"
-      field="passwordConfirm"
+      label="Password"
+      field="password"
       onChange={this.onChange.bind(this)}
-      value={data.passwordConfirm}
-      error={errors.passwordConfirm}
+      value={data.password}
+      error={errors.password}
     />
 
-  <div className={
-    classNames("form-group", {
-      "has-error": errors.timezone
-    }
+  <TextFieldGroup
+    label="Password confirmation"
+    field="passwordConfirm"
+    onChange={this.onChange.bind(this)}
+    value={data.passwordConfirm}
+    error={errors.passwordConfirm}
+  />
+
+<div className={
+  classNames("form-group", {
+    "has-error": errors.timezone
+  }
   )}>
-    <label className="control-label">Timezone</label>
-    <select
-      value={this.state.data.timezone}
-      onChange={this.onChange.bind(this)}
-      className="form-control"
-      name="timezone"
-      type="text"
-    >
-      <option value="" disabled>Выберите свой часовой пояс</option>
-      {options}
-    </select>
-  </div>
-  <div className="form-group">
-    <button
-      className="btn btn-primary btn-lg"
-      disabled={isFetching}
-    >
-      Sign up
-    </button>
-  </div>
-</form>
+  <label className="control-label">Timezone</label>
+  <select
+    value={this.state.data.timezone}
+    onChange={this.onChange.bind(this)}
+    className="form-control"
+    name="timezone"
+    type="text"
+  >
+    <option value="" disabled>Выберите свой часовой пояс</option>
+    {options}
+  </select>
+</div>
+<div className="form-group">
+  <button
+    className="btn btn-primary btn-lg"
+    disabled={isFetching}
+  >
+    Sign up
+  </button>
+</div>
+        </form>
     );
   }
 }

@@ -2,10 +2,12 @@ import React from 'react';
 import SignupForm from './SignupForm.js';
 import {connect} from 'react-redux';
 import {userSignupRequest} from '../../actions/signupActions';
+import {addFlashMessage}  from '../../actions/flashMessages';
 
 const SignupPage = ({
   auth,
-  userSignupRequest
+  userSignupRequest,
+  addFlashMessage
 }) =>
   <div className="row">
     <div className="col-md-4 col-md-offset-4">
@@ -13,6 +15,7 @@ const SignupPage = ({
         userSignupRequest={userSignupRequest}
         errors={auth.errors}
         isFetching={auth.isFetching}
+        addFlashMessage={addFlashMessage}
       />
     </div>
   </div>
@@ -29,6 +32,7 @@ const mapStateToProps = (state) => ({
 export default connect(
   mapStateToProps,
   {
-    userSignupRequest
+    userSignupRequest,
+    addFlashMessage
   }
 )(SignupPage);

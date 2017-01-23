@@ -22,14 +22,13 @@ const callApi = (endpoint, method, payload, testUrl) => {
   }
 
   return fetch(fullUrl, requestOptions)
-    .then(response => response.json()
-      .then(json => {
-        if (!response.ok) {
-          return Promise.reject(json)
-        }
-        return json;
-      })
-    )
+    .then(response => response.json().then(json => ({json, response})))
+    .then(({json, response}) => {
+      if (!response.ok) {
+        return Promise.reject(json)
+      }
+      return json;
+    })
 }
 
 export const CALL_API = Symbol('Call API');
