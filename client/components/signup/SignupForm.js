@@ -8,7 +8,7 @@ import shortid from 'shortid';
 import {browserHistory} from 'react-router';
 import {SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE} from '../../constants';
 import {connect} from 'react-redux';
-import {userSignupRequest} from '../../actions/signupActions';
+import {userSignupRequest, isUserExists} from '../../actions/signupActions';
 import {addFlashMessage}  from '../../actions/flashMessages';
 
 class SignupForm extends React.Component {
@@ -44,10 +44,10 @@ class SignupForm extends React.Component {
     const field = e.target.name;
     const val = e.target.value;
     if (val !== '') {
-      //this.props.isUserExists()
-      //  .then((res) => {
+      this.props.isUserExists()
+        .then((res) => {
 
-      //  });
+        });
     }
   }
 
@@ -160,7 +160,7 @@ class SignupForm extends React.Component {
   >
     Sign up
   </button>
-      </div>
+</div>
     </form>
     );
   }
@@ -168,6 +168,7 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
+  isUserExists: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired
 }
 
@@ -180,6 +181,7 @@ export default connect(
   mapStateToProps,
   {
     userSignupRequest,
-    addFlashMessage
+    addFlashMessage,
+    isUserExists
   }
 )(SignupForm);

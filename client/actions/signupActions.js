@@ -19,4 +19,18 @@ export const fetchSignup = (userData, testUrl) => ({
 
 export const userSignupRequest = (userData, testUrl) => (dispatch, getState) =>
   dispatch(fetchSignup(userData, testUrl));
-    
+
+import {
+  USER_EXISTS_REQUEST,
+  USER_EXISTS_SUCCESS,
+  USER_EXISTS_FAILURE
+} from '../constants';
+
+export const isUserExists = (identifier) => 
+  dispatch({
+    [CALL_API]: {
+      types: [USER_EXISTS_REQUEST, USER_EXISTS_SUCCESS, USER_EXISTS_FAILURE],
+      method: 'GET',
+      endpoint: `users/${identifier}`
+    }
+  })
