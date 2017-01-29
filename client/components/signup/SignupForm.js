@@ -6,6 +6,10 @@ import TextFieldGroup from '../common/TextFieldGroup';
 import classNames from 'classnames';
 import shortid from 'shortid';
 import {browserHistory} from 'react-router';
+import {SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE} from '../../constants';
+import {connect} from 'react-redux';
+import {userSignupRequest} from '../../actions/signupActions';
+import {addFlashMessage}  from '../../actions/flashMessages';
 
 class SignupForm extends React.Component {
   constructor(props){
@@ -36,6 +40,17 @@ class SignupForm extends React.Component {
     });
   }
 
+  checkUserExists (e) {
+    const field = e.target.name;
+    const val = e.target.value;
+    if (val !== '') {
+      //this.props.isUserExists()
+      //  .then((res) => {
+
+      //  });
+    }
+  }
+
   isValid(){
     const {errors, isValid} = validateInput(this.state.data);
 
@@ -52,7 +67,7 @@ class SignupForm extends React.Component {
     if (this.isValid()){
       this.props.userSignupRequest(this.state.data)
         .then((action) => {
-          if (action.status == 'SUCCESS') {
+          if (action.type == SIGNUP_SUCCESS) {
             this.props.addFlashMessage({
               id: shortid(),
               type: 'success',
@@ -60,8 +75,8 @@ class SignupForm extends React.Component {
             });
             browserHistory.push('/');
 
-          } else if (action.status == 'FAIL') {
-            alert("Ошибка!")
+          } else if (action.type == SIGNUP_FAILURE) {
+            //alert("Ошибка!")
 
           }
         });
@@ -90,6 +105,7 @@ class SignupForm extends React.Component {
           label="Username"
           field="username"
           onChange={this.onChange.bind(this)}
+          checkUserExists={this.checkUserExists.bind(this)}
           value={data.username}
           error={errors.username}
         />
@@ -98,6 +114,7 @@ class SignupForm extends React.Component {
         label="Email"
         field="email"
         onChange={this.onChange.bind(this)}
+        checkUserExists={this.checkUserExists.bind(this)}
         value={data.email}
         error={errors.email}
       />
@@ -150,7 +167,19 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignupRequest: React.PropTypes.func.isRequired
+  userSignupRequest: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.func.isRequired
 }
 
-export default SignupForm;
+const mapStateToProps = (state) => ({
+  errors: state.auth.errors,
+  isFetching: state.auth.isFetching
+});
+
+export default connect(
+  mapStateToProps,
+  {
+    userSignupRequest,
+    addFlashMessage
+  }
+)(SignupForm);
