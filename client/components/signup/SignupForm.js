@@ -51,13 +51,19 @@ class SignupForm extends React.Component {
 
     if (this.isValid()){
       this.props.userSignupRequest(this.state.data)
-        .then(()=>{
-          this.props.addFlashMessage({
-            id: shortid(),
-            type: 'success',
-            text: 'You signed succesfully. Welcome!'
-          });
-          browserHistory.push('/');
+        .then((action) => {
+          if (action.status == 'SUCCESS') {
+            this.props.addFlashMessage({
+              id: shortid(),
+              type: 'success',
+              text: 'You signed succesfully. Welcome!'
+            });
+            browserHistory.push('/');
+
+          } else if (action.status == 'FAIL') {
+            alert("Ошибка!")
+
+          }
         });
     }
   }
@@ -128,6 +134,7 @@ class SignupForm extends React.Component {
     <option value="" disabled>Выберите свой часовой пояс</option>
     {options}
   </select>
+  {errors.timezone && <span className="help-block">{errors.timezone}</span>}
 </div>
 <div className="form-group">
   <button
@@ -136,8 +143,8 @@ class SignupForm extends React.Component {
   >
     Sign up
   </button>
-</div>
-        </form>
+      </div>
+    </form>
     );
   }
 }

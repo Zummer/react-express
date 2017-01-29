@@ -25,7 +25,8 @@ const callApi = (endpoint, method, payload, testUrl) => {
     .then(response => response.json().then(json => ({json, response})))
     .then(({json, response}) => {
       if (!response.ok) {
-        return Promise.reject(json)
+        //throw json; // аналогично строке ниже
+        return Promise.reject(json);
       }
       return json;
     })
@@ -33,7 +34,7 @@ const callApi = (endpoint, method, payload, testUrl) => {
 
 export const CALL_API = Symbol('Call API');
 
-const api = store => next => async action => {
+const api = store => next => action => {
 
   const callAPI = action[CALL_API];
 
@@ -73,26 +74,27 @@ const api = store => next => async action => {
 
   const [ requestType, successType, failureType  ] = types;
   next(actionWith({
-    type: requestType
+    type: requestType,
+    status: 'SEND'
   }));
 
-  try {
-    const response = await callApi(endpoint, method, payload, testUrl)
-    next(actionWith({
-      type: successType,
-      payload: response
+  return callApi(endpoint, method, payload, testUrl)
+    .then(
+      (response) => next(actionWith({
+        type: successType,
+        payload: response,
+        status: 'SUCCESS'
 
-    }))
+      })),
+      (error) => next(actionWith({
+        type: failureType,
+        error: error.message || 'Something bad happened',
+        payload: error,
+        status: 'FAIL'
 
-  } catch (error) {
-    next(actionWith({
-      type: failureType,
-      error: error.message || 'Something bad happened',
-      payload: error
+      }))
 
-    }))
-
-  }
+    );
 
 }
 

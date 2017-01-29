@@ -9,6 +9,9 @@ import configureMockStore from 'redux-mock-store';
 const middlewares = [thunk, api];
 const mockStore = configureMockStore(middlewares);
 
+process.on('unhandledRejection', (reason, promise) => throw promise);
+process.on('uncaughtException', error => throw error);
+
 describe('async actions', () => {
   afterEach(() => {
     nock.cleanAll();
@@ -27,23 +30,27 @@ describe('async actions', () => {
     const testUrl = 'http://any.com';
 
     nock(testUrl)
+      .log(console.log)
       .post('/api/users')
       .reply(200, { success: true } )
 
     const expectedActions = [
-      {type: types.SIGNUP_REQUEST, status: 'SEND'},
-      {type: types.SIGNUP_SUCCESS, status: 'SUCCESS', payload: {success:true}}
+      {type: types.SIGNUP_REQUEST},
+      {type: types.SIGNUP_SUCCESS},
+      {type: types.ADD_FLASH_MESSAGE}
     ]
 
     const store = mockStore({
-      //isFetching: false,
-      //errors: {}
+      isFetching: false,
+      errors: {}
     });
 
     store.dispatch(actions.userSignupRequest(newUser, testUrl))
       .then(() => { // return of async actions
-        expect(store.getActions()).toEqual(expectedActions);
-        
+          console.log(action)
+        store.getActions().map((action, i) => {
+          expect(action.type).toEqual(expectedActions[i].type)
+        })
       })
   });
 
