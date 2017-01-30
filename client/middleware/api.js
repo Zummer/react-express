@@ -82,14 +82,13 @@ const api = store => next => action => {
     .then(
       (response) => next(actionWith({
         type: successType,
-        payload: response,
+        response,
         status: 'SUCCESS'
 
       })),
       (error) => next(actionWith({
         type: failureType,
-        error: error.message || 'Something bad happened',
-        payload: error,
+        error: error || error.message || 'Something bad happened',
         status: 'FAIL'
 
       }))

@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
       }
     case SIGNUP_FAILURE:
       return {
-        errors: action.payload,
+        errors: action.error,
         isFetching: false
       }
     default:

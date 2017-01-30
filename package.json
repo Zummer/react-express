@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch server server --exec babel-node",
-    "server": "nodemon --watch server --exec babel-node -- server",
+    "server": "nodemon --watch server --inspect server --exec babel-node",
     "test": "mocha --compilers js:babel-register --recursive",
     "jest": "jest --watch"
   },
