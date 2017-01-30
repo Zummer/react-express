@@ -88,7 +88,8 @@ const api = store => next => action => {
       })),
       (error) => next(actionWith({
         type: failureType,
-        error: error || error.message || 'Something bad happened',
+        error: error, 
+        message: error.message || 'Something bad happened',
         status: 'FAIL'
 
       }))
