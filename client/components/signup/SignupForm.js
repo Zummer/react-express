@@ -61,25 +61,25 @@ class SignupForm extends React.Component {
     return isValid;
   }
 
-  onSubmit(e){
+  async onSubmit(e){
     e.preventDefault();
 
     if (this.isValid()){
-      this.props.userSignupRequest(this.state.data)
-        .then((action) => {
-          if (action.type == SIGNUP_SUCCESS) {
-            this.props.addFlashMessage({
-              id: shortid(),
-              type: 'success',
-              text: 'You signed succesfully. Welcome!'
-            });
-            browserHistory.push('/');
+      try {
+        const action = await this.props.userSignupRequest(this.state.data);
+        if (action.type == SIGNUP_SUCCESS) {
+          this.props.addFlashMessage({
+            id: shortid(),
+            type: 'success',
+            text: 'You signed succesfully. Welcome!'
+          });
+          browserHistory.push('/');
 
-          } else if (action.type == SIGNUP_FAILURE) {
-            //alert("Ошибка!")
+        }
+      } catch (error) {
+        console.log(error);
 
-          }
-        });
+      }
     }
   }
 
@@ -161,7 +161,7 @@ class SignupForm extends React.Component {
     Sign up
   </button>
 </div>
-    </form>
+  </form>
     );
   }
 }

@@ -2,7 +2,7 @@
 
 const API_ROOT = 'api/';
 
-const callApi = (endpoint, method, payload, testUrl) => {
+const callApi = async (endpoint, method, payload, testUrl) => {
   let fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
 
   if (testUrl) {
@@ -21,20 +21,34 @@ const callApi = (endpoint, method, payload, testUrl) => {
     requestOptions.body = JSON.stringify(payload);
   }
 
-  return fetch(fullUrl, requestOptions)
-    .then(response => response.json().then(json => ({json, response})))
-    .then(({json, response}) => {
-      if (!response.ok) {
-        //throw json; // аналогично строке ниже
-        return Promise.reject(json);
-      }
-      return json;
-    })
+  try {
+    const response = await fetch(fullUrl, requestOptions);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw data;
+    } else {
+      return data;
+    }
+  
+  } catch (error) {
+     throw error;
+  }
+  
+  //return fetch(fullUrl, requestOptions)
+  //  .then(response => response.json().then(json => ({json, response})))
+  //  .then(({json, response}) => {
+  //    if (!response.ok) {
+  //      //throw json; // аналогично строке ниже
+  //      return Promise.reject(json);
+  //    }
+  //    return json;
+  //  })
 }
 
 export const CALL_API = Symbol('Call API');
 
-const api = store => next => action => {
+const api = store => next => async action => {
 
   const callAPI = action[CALL_API];
 
@@ -78,24 +92,24 @@ const api = store => next => action => {
     status: 'SEND'
   }));
 
-  return callApi(endpoint, method, payload, testUrl)
-    .then(
-      (response) => next(actionWith({
-        type: successType,
-        response,
-        status: 'SUCCESS'
+  try {
+    const response = await callApi(endpoint, method, payload, testUrl);
+    return next(actionWith({
+      type: successType,
+      response,
+      status: 'SUCCESS'
 
-      })),
-      (error) => next(actionWith({
-        type: failureType,
-        error: error, 
-        message: error.message || 'Something bad happened',
-        status: 'FAIL'
+    }));
 
-      }))
+  } catch (error) {
+    return next(actionWith({
+      type: failureType,
+      error: error,
+      message: error.message || 'Something bad happened',
+      status: 'FAIL'
 
-    );
-
+    }));
+  }
 }
 
 export default api;
