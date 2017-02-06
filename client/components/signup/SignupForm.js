@@ -6,69 +6,67 @@ import TextFieldGroup from '../common/TextFieldGroup';
 import classNames from 'classnames';
 import shortid from 'shortid';
 import {browserHistory} from 'react-router';
-import {SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE} from '../../constants';
 import {connect} from 'react-redux';
-import {userSignupRequest, isUserExists} from '../../actions/signupActions';
 import {addFlashMessage}  from '../../actions/flashMessages';
+import isEmpty from 'lodash/isEmpty';
+import {
+  SIGNUP_REQUEST, 
+  SIGNUP_SUCCESS, 
+  SIGNUP_FAILURE,
+  userSignupRequest, 
+  isUserExists, 
+  setSignUpState
+} from '../../actions/signupActions';
 
-class SignupForm extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      errors: {},
-      data:{
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        timezone: ''
-      }
-    }
-  }
-
-  onChange(e){
+const SignupForm = ({
+  errors,
+  data,
+  isFetching,
+  router,
+  setSignUpState,
+  userSignupRequest,
+  isUserExists,
+  addFlashMessage
+}) => {
+  const onChange = (e) => {
     const {name, value} = e.target;
-    const {errors} = this.state;
-    delete errors[name];
+    let newStateErrors = {...errors};
+    delete newStateErrors[name];
 
-    this.setState({
-      errors,
-      data: {
-        ...this.state.data,
-        [name]: value
-      }
+    setSignUpState({
+      data: {...data, [name]: value},
+      errors: newStateErrors
+
     });
   }
 
-  checkUserExists (e) {
+  const checkUserExists = (e) => {
     const field = e.target.name;
     const val = e.target.value;
     if (val !== '') {
-      this.props.isUserExists()
-        .then((res) => {
-
-        });
+      isUserExists(field, val);
     }
   }
 
-  isValid(){
-    const {errors, isValid} = validateInput(this.state.data);
+  const isValid = () => {
+    const {errors, isValid} = validateInput(data);
 
-    if(!isValid) {
-      this.setState({errors});
-    }
+    setSignUpState({
+      data,
+      errors
 
+    });
     return isValid;
   }
 
-  async onSubmit(e){
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (this.isValid()){
+    if (isValid()){
       try {
-        const action = await this.props.userSignupRequest(this.state.data);
+        const action = await userSignupRequest(data);
         if (action.type == SIGNUP_SUCCESS) {
-          this.props.addFlashMessage({
+          addFlashMessage({
             id: shortid(),
             type: 'success',
             text: 'You signed succesfully. Welcome!'
@@ -83,57 +81,51 @@ class SignupForm extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    this.setState({
-      errors: nextProps.errors
-    })
-  }
+  const options = map(timezones, (val, key)=>
+    <option key={val} value={val}>{key}</option>
+  );
 
-  render(){
-    const options = map(timezones, (val, key)=>
-      <option key={val} value={val}>{key}</option>
-    );
+  //const inputs = {};
 
-    const {errors, data} = this.state;
-    const {isFetching} = this.props;
+  //const setRef = (key) => (node) => inputs[key] = node;
 
-    return (
-      <form onSubmit={this.onSubmit.bind(this)}>
-        <h1>Присоединяйтесь!</h1>
-
-        <TextFieldGroup
-          label="Username"
-          field="username"
-          onChange={this.onChange.bind(this)}
-          checkUserExists={this.checkUserExists.bind(this)}
-          value={data.username}
-          error={errors.username}
-        />
+  return (
+    <form onSubmit={onSubmit}>
+      <h1>Присоединяйтесь!</h1>
 
       <TextFieldGroup
-        label="Email"
-        field="email"
-        onChange={this.onChange.bind(this)}
-        checkUserExists={this.checkUserExists.bind(this)}
-        value={data.email}
-        error={errors.email}
+        label="Username"
+        field="username"
+        onChange={onChange}
+        checkUserExists={checkUserExists}
+        value={data.username}
+        error={errors.username}
       />
 
     <TextFieldGroup
-      label="Password"
-      field="password"
-      onChange={this.onChange.bind(this)}
-      value={data.password}
-      error={errors.password}
+      label="Email"
+      field="email"
+      onChange={onChange}
+      checkUserExists={checkUserExists}
+      value={data.email}
+      error={errors.email}
     />
 
   <TextFieldGroup
-    label="Password confirmation"
-    field="passwordConfirm"
-    onChange={this.onChange.bind(this)}
-    value={data.passwordConfirm}
-    error={errors.passwordConfirm}
+    label="Password"
+    field="password"
+    onChange={onChange}
+    value={data.password}
+    error={errors.password}
   />
+
+<TextFieldGroup
+  label="Password confirmation"
+  field="passwordConfirm"
+  onChange={onChange}
+  value={data.passwordConfirm}
+  error={errors.passwordConfirm}
+/>
 
 <div className={
   classNames("form-group", {
@@ -142,8 +134,8 @@ class SignupForm extends React.Component {
   )}>
   <label className="control-label">Timezone</label>
   <select
-    value={this.state.data.timezone}
-    onChange={this.onChange.bind(this)}
+    value={data.timezone}
+    onChange={onChange}
     className="form-control"
     name="timezone"
     type="text"
@@ -156,14 +148,13 @@ class SignupForm extends React.Component {
 <div className="form-group">
   <button
     className="btn btn-primary btn-lg"
-    disabled={isFetching}
+    disabled={isFetching || !isEmpty(errors)}
   >
     Sign up
   </button>
-</div>
+    </div>
   </form>
-    );
-  }
+  );
 }
 
 SignupForm.propTypes = {
@@ -174,7 +165,8 @@ SignupForm.propTypes = {
 
 const mapStateToProps = (state) => ({
   errors: state.auth.errors,
-  isFetching: state.auth.isFetching
+  isFetching: state.auth.isFetching,
+  data: state.auth.data
 });
 
 export default connect(
@@ -182,6 +174,7 @@ export default connect(
   {
     userSignupRequest,
     addFlashMessage,
-    isUserExists
+    isUserExists,
+    setSignUpState
   }
 )(SignupForm);

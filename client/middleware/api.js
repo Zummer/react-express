@@ -79,9 +79,9 @@ const api = store => next => async action => {
 
   }
 
-  const actionWith = payload => {
-    const finalAction = Object.assign({}, action, payload);
-    delete finalAction[CALL_API];
+  const actionWith = obj => {
+    const finalAction = Object.assign({}, action, obj);
+    //delete finalAction[CALL_API];
     return finalAction;
 
   }
@@ -98,7 +98,6 @@ const api = store => next => async action => {
       type: successType,
       response,
       status: 'SUCCESS'
-
     }));
 
   } catch (error) {
@@ -107,7 +106,6 @@ const api = store => next => async action => {
       error: error,
       message: error.message || 'Something bad happened',
       status: 'FAIL'
-
     }));
   }
 }

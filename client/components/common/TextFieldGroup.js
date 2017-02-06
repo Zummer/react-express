@@ -7,6 +7,7 @@ const TextFieldGroup = ({
   label,
   error,
   type,
+  //setRef,
   onChange,
   checkUserExists
 }) => {
@@ -18,6 +19,7 @@ const TextFieldGroup = ({
     }>
     <label className="control-label">{label}</label>
     <input
+      //ref={setRef}
       className="form-control"
       onChange={onChange}
       onBlur={checkUserExists}

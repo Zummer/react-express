@@ -33,6 +33,18 @@ const validateInput = (data, otherValidations) => {
 
 let router = express.Router();
 
+router.get('/:id', (req, res) => {
+  User.query({
+    select: ['username', 'email'],
+    where: {email: req.params.id},
+    orWhere: {username: req.params.id}
+  })
+    .fetch()
+    .then(
+      (user) => res.json({user})
+    );
+})
+
 router.post('/', (req, res) => {
   validateInput(req.body, commonValidations).then(({errors, isValid}) => {
     if(isValid){
