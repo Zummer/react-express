@@ -4,7 +4,7 @@ import webpack from 'webpack';
 export default {
   devtool: 'eval-source-map',
   entry: [
-    'babel-polyfill', 
+    'babel-polyfill',
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     path.join(__dirname, '/client/index.js')
@@ -31,6 +31,11 @@ export default {
     ]
   },
   resolve: {
+    root: path.resolve(__dirname),
+    alias: {
+      actions: 'client/actions',
+      validations: 'server/shared/validations'
+    },
     extentions: [ '', '.js'  ]
   }
 }

@@ -1,12 +1,23 @@
-//import fetch from 'isomorphic-fetch'
+import queryString from 'query-string';
 
 const API_ROOT = 'api/';
 
-const callApi = async (endpoint, method, payload, testUrl) => {
+const callApi = async (endpoint, method, queryParams, payload, testUrl) => {
   let fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
 
   if (testUrl) {
     fullUrl = testUrl + '/' + fullUrl;
+  }
+
+  if (queryParams && typeof queryParams == 'object') {
+    if(fullUrl.indexOf("/?") === -1) {
+      fullUrl += '?' + queryString.stringify(queryParams);
+
+    } else {
+      fullUrl += '&' + queryString.stringify(queryParams);
+
+    }
+
   }
 
   let requestOptions = {
@@ -30,11 +41,11 @@ const callApi = async (endpoint, method, payload, testUrl) => {
     } else {
       return data;
     }
-  
+
   } catch (error) {
-     throw error;
+    throw error;
   }
-  
+
   //return fetch(fullUrl, requestOptions)
   //  .then(response => response.json().then(json => ({json, response})))
   //  .then(({json, response}) => {
@@ -58,7 +69,7 @@ const api = store => next => async action => {
   }
 
   let { endpoint  } = callAPI;
-  const { payload, method, types, testUrl } = callAPI;
+  const { payload, method, types, testUrl, queryParams} = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -93,7 +104,7 @@ const api = store => next => async action => {
   }));
 
   try {
-    const response = await callApi(endpoint, method, payload, testUrl);
+    const response = await callApi(endpoint, method, queryParams, payload, testUrl);
     return next(actionWith({
       type: successType,
       response,

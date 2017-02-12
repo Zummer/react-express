@@ -1,5 +1,5 @@
 import React from 'react';
-import SignupForm from './SignupForm.js';
+import SignupForm from './SignupForm';
 
 const SignupPage = () =>
   <div className="row">

@@ -29,14 +29,24 @@ export const isUserExists = (field, identifier) => (dispatch, getState) =>
       types: [USER_EXISTS_REQUEST, USER_EXISTS_SUCCESS, USER_EXISTS_FAILURE],
       method: 'GET',
       endpoint: `users/${identifier}`,
-      field   
+      field,
+      queryParams: {
+        field
+      }
     }
   })
 
 export const SET_SIGNUP_STATE = 'SET_SIGNUP_STATE';
 
-export const setSignUpState = stateData => ({
-    type: SET_SIGNUP_STATE,
-    payload: stateData
+export const setSignUpState = data => (dispatch, getState) => {
 
-});
+  const state = getState().auth;
+
+  dispatch({
+    type: SET_SIGNUP_STATE,
+    payload: {
+      ...state,
+      ...data
+    }
+  })
+};

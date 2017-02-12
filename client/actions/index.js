@@ -1,7 +1,13 @@
 export {
-    userSignupRequest
+  userSignupRequest
 } from './signupActions';
 
 export {
-    addFlashMessage
+  addFlashMessage
 } from './flashMessages';
+
+export {
+  SET_LOGIN_STATE,
+  setLoginState,
+  login
+} from './loginActions';

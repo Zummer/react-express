@@ -1,20 +1,20 @@
 import React from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
-import validateInput from '../../../server/shared/validations/signup';
+import validateInput from 'validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
 import classNames from 'classnames';
 import shortid from 'shortid';
-import {browserHistory} from 'react-router';
+import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {addFlashMessage}  from '../../actions/flashMessages';
 import isEmpty from 'lodash/isEmpty';
 import {
-  SIGNUP_REQUEST, 
-  SIGNUP_SUCCESS, 
+  SIGNUP_REQUEST,
+  SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
-  userSignupRequest, 
-  isUserExists, 
+  userSignupRequest,
+  isUserExists,
   setSignUpState
 } from '../../actions/signupActions';
 
@@ -51,11 +51,11 @@ const SignupForm = ({
   const isValid = () => {
     const {errors, isValid} = validateInput(data);
 
-    setSignUpState({
-      data,
-      errors
+    if (!isValid){
+      setSignUpState({errors});
 
-    });
+    }
+
     return isValid;
   }
 
@@ -71,7 +71,7 @@ const SignupForm = ({
             type: 'success',
             text: 'You signed succesfully. Welcome!'
           });
-          browserHistory.push('/');
+          router.push('/');
 
         }
       } catch (error) {
@@ -95,36 +95,38 @@ const SignupForm = ({
 
       <TextFieldGroup
         label="Username"
-        field="username"
+        name="username"
         onChange={onChange}
-        checkUserExists={checkUserExists}
+        onBlur={checkUserExists}
         value={data.username}
         error={errors.username}
       />
 
     <TextFieldGroup
       label="Email"
-      field="email"
+      name="email"
       onChange={onChange}
-      checkUserExists={checkUserExists}
+      onBlur={checkUserExists}
       value={data.email}
       error={errors.email}
     />
 
   <TextFieldGroup
     label="Password"
-    field="password"
+    name="password"
     onChange={onChange}
     value={data.password}
     error={errors.password}
+    type="password"
   />
 
 <TextFieldGroup
   label="Password confirmation"
-  field="passwordConfirm"
+  name="passwordConfirm"
   onChange={onChange}
   value={data.passwordConfirm}
   error={errors.passwordConfirm}
+  type="password"
 />
 
 <div className={
@@ -158,6 +160,11 @@ const SignupForm = ({
 }
 
 SignupForm.propTypes = {
+  errors: React.PropTypes.object.isRequired,
+  data: React.PropTypes.object.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
+  router: React.PropTypes.object.isRequired,
+  setSignUpState: React.PropTypes.func.isRequired,
   userSignupRequest: React.PropTypes.func.isRequired,
   isUserExists: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired
@@ -169,7 +176,7 @@ const mapStateToProps = (state) => ({
   data: state.auth.data
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   {
     userSignupRequest,
@@ -177,4 +184,4 @@ export default connect(
     isUserExists,
     setSignUpState
   }
-)(SignupForm);
+)(SignupForm));

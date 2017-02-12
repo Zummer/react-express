@@ -33,12 +33,32 @@ const validateInput = (data, otherValidations) => {
 
 let router = express.Router();
 
-router.get('/:id', (req, res) => {
-  User.query({
-    select: ['username', 'email'],
-    where: {email: req.params.id},
-    orWhere: {username: req.params.id}
-  })
+router.get('/:identifier', (req, res) => {
+
+  let query;
+
+  if(
+    !isEmpty(req.query) &&
+    req.query.field &&
+    ['username', 'email'].some(field => field == req.query.field)
+  ) {
+
+    const field = req.query.field;
+
+    query = User.query({
+      select: [field],
+      where: {[field]: req.params.identifier}
+    });
+
+  } else {
+    query = User.query({
+      select: ['username', 'email'],
+      where: {username: req.params.identifier},
+      orWhere: {email: req.params.identifier}
+    });
+  }
+
+  query
     .fetch()
     .then(
       (user) => res.json({user})

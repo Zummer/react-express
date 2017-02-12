@@ -35,7 +35,21 @@ export default (state = initialState, action) => {
 
       if (action.response && action.response.user) {
         const field = action[CALL_API].field;
-        const message = "There is user with such " + field;
+
+        let message;
+
+        switch (field) {
+          case 'username':
+            message = 'Уже есть пользователь с таким именем';
+            break;
+          case 'email':
+            message = 'Уже есть пользователь с такой почтой';
+            break;
+          default:
+            message = `Пользователь с таким ${field} уже существует`;
+
+        }
+
         errors[field] = message;
       }
 

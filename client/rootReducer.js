@@ -1,8 +1,4 @@
 import { combineReducers  } from 'redux'
-import auth from './reducers/auth';
-import flashMessages from './reducers/flashMessages';
+import reducers from './reducers';
 
-export default combineReducers({
-  auth,
-  flashMessages
-});
+export default combineReducers(reducers);

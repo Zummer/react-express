@@ -5,6 +5,7 @@ import api from '../client/middleware/api'
 import * as actions from '../client/actions/signupActions'
 import * as types from '../client/constants'
 import configureMockStore from 'redux-mock-store';
+import {CALL_API} from '../client/middleware/api';
 
 const middlewares = [thunk, api];
 const mockStore = configureMockStore(middlewares);
@@ -24,6 +25,14 @@ describe('async actions', () => {
       username: "123"
     }
 
+    const callApi = {
+          endpoint: "users", 
+          method: "POST", 
+          payload: newUser, 
+          testUrl: "http://any.com", 
+          types: ["SIGNUP_REQUEST", "SIGNUP_SUCCESS", "SIGNUP_FAILURE"]
+        };
+
     const testUrl = 'http://any.com';
 
     nock(testUrl)
@@ -31,9 +40,19 @@ describe('async actions', () => {
       .reply(200, { success: true } )
 
     const expectedActions = [
-      {type: types.SIGNUP_REQUEST, status: 'SEND'},
-      {type: types.SIGNUP_SUCCESS, status: 'SUCCESS', payload: {success:true}}
+      {
+        status: 'SEND',
+        type: 'SIGNUP_REQUEST', 
+        [CALL_API]: callApi
+      },
+      {
+        status: 'SUCCESS', 
+        type: 'SIGNUP_SUCCESS', 
+        response: {success:true},
+        [CALL_API]: callApi
+      }
     ]
+
 
     const store = mockStore({
       //isFetching: false,
