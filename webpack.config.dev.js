@@ -25,7 +25,12 @@ export default {
           path.join(__dirname, 'client'),
           path.join(__dirname, 'server/shared')
         ],
-        loaders: [ 'babel'  ]
+        loader: 'babel',
+        query: {
+          presets: ["es2015", "react", "stage-0"],
+          plugins: ["react-hot-loader/babel"],
+          babelrc: false
+        }
       },
       { test: /\.json$/, loader: 'json'  }
     ]
