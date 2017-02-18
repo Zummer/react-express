@@ -31,14 +31,14 @@ export default (state = initialState, action) => {
         isFetching: true
       }
     case LOGIN_SUCCESS: {
-      const {token} = action.response;
-      const user = jwt.decode(token);
+      //const {token} = action.response;
+      //const user = jwt.decode(token);
       return {
         ...state,
         isFetching: false,
-        isAuthenticated: !isEmpty(user),
-        user,
-        statusText: 'You have been successfully logged in.'
+        //isAuthenticated: !isEmpty(user),
+        //user,
+        //statusText: 'You have been successfully logged in.'
       }
     }
     case LOGIN_FAILURE:
@@ -62,10 +62,11 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        isFetching: false,
         isAuthenticated: !isEmpty(user),
         user,
-        statusText: 'You have been successfully logged in.'
+        statusText: !isEmpty(user) ?
+          'You have been successfully logged in.' :
+          'You have been successfully logged out.'
       }
     }
       // ----------------------------------------------------------------

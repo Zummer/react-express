@@ -14,5 +14,6 @@ export {
   SET_LOGIN_STATE,
   setLoginState,
   SET_CURRENT_USER,
-  setCurrentUser
+  setCurrentUser,
+  logout
 } from './authActions';

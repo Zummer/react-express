@@ -34,6 +34,7 @@ export const login = data => async (dispatch, getState) => {
     if(action.type == LOGIN_SUCCESS && action.response) {
       const token = action.response.token;
       localStorage.setItem('jwtToken', token);
+      dispatch(setCurrentUser(token));
     }
 
     return action;
@@ -43,6 +44,11 @@ export const login = data => async (dispatch, getState) => {
   }
 
 }
+
+export const logout = () => dispatch => {
+  localStorage.removeItem('jwtToken');
+  dispatch(setCurrentUser(null));
+};
 
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
