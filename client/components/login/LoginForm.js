@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from 'validations/login';
-import {setLoginState, login} from 'actions';
+import {setLoginState, login, LOGIN_SUCCESS} from 'actions';
 import {withRouter} from 'react-router';
 
 const LoginForm = ({
@@ -27,8 +27,8 @@ const LoginForm = ({
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (isValid()) {
-    try {
+    if (isValid()){
+      try {
         const action = await login(data);
         if (action.type == LOGIN_SUCCESS) {
           router.push('/');
@@ -59,31 +59,36 @@ const LoginForm = ({
     <form onSubmit={onSubmit}>
       <h1>Login</h1>
 
-      <TextFieldGroup
-        name="identifier"
-        label='Username / Email'
-        value={data.identifier}
-        error={errors.identifier}
-        onChange={onChange}
-      />
+      {errors.form &&
+          <div className="alert alert-danger">
+            {errors.form}
+          </div>}
 
-    <TextFieldGroup
-      name="password"
-      label='Password'
-      value={data.password}
-      error={errors.password}
-      onChange={onChange}
-      type="password"
-    />
+          <TextFieldGroup
+            name="identifier"
+            label='Username / Email'
+            value={data.identifier}
+            error={errors.identifier}
+            onChange={onChange}
+          />
 
-  <div className="form-group">
-    <button
-      className="btn btn-primary btn-lg"
-      disabled={isFetching}
-    >
-      Login
-    </button>
-  </div>
+        <TextFieldGroup
+          name="password"
+          label='Password'
+          value={data.password}
+          error={errors.password}
+          onChange={onChange}
+          type="password"
+        />
+
+      <div className="form-group">
+        <button
+          className="btn btn-primary btn-lg"
+          disabled={isFetching}
+        >
+          Login
+        </button>
+      </div>
     </form>
   );
 }
