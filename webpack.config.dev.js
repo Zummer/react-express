@@ -2,7 +2,7 @@ import path from 'path'
 import webpack from 'webpack';
 
 export default {
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   entry: [
     'babel-polyfill',
     'react-hot-loader/patch',
@@ -32,7 +32,7 @@ export default {
           babelrc: false
         }
       },
-      { test: /\.json$/, loader: 'json'  }
+      { test: /\.json$/, loader: 'json' }
     ]
   },
   resolve: {
@@ -42,5 +42,10 @@ export default {
       validations: 'server/shared/validations'
     },
     extentions: [ '', '.js'  ]
+  },
+  node: {
+    net: 'empty',
+    dns: 'empty'
   }
+
 }

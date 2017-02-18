@@ -4,7 +4,7 @@ export const SET_LOGIN_STATE = 'SET_LOGIN_STATE';
 
 export const setLoginState = data => (dispatch, getState) => {
 
-  const state = getState().login;
+  const state = getState().auth;
 
   dispatch({
     type: SET_LOGIN_STATE,
@@ -20,7 +20,7 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
-export const login = (data) => async (dispatch, getState) => {
+export const login = data => async (dispatch, getState) => {
   try {
     const action = await dispatch({
       [CALL_API]: {
@@ -31,9 +31,9 @@ export const login = (data) => async (dispatch, getState) => {
       }
     });
 
-    if(action.type == LOGIN_SUCCESS) {
-      const token = action.response;
-      console.log(token);
+    if(action.type == LOGIN_SUCCESS && action.response) {
+      const token = action.response.token;
+      localStorage.setItem('jwtToken', token);
     }
 
     return action;
@@ -43,4 +43,11 @@ export const login = (data) => async (dispatch, getState) => {
   }
 
 }
+
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+
+export const setCurrentUser = token => ({
+  type: SET_CURRENT_USER,
+  token
+});
 

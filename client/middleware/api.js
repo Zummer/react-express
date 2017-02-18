@@ -2,7 +2,7 @@ import queryString from 'query-string';
 
 const API_ROOT = 'api/';
 
-const callApi = async (endpoint, method, queryParams, payload, testUrl) => {
+const callApi = async (endpoint, method, token, queryParams, payload, testUrl) => {
   let fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
 
   if (testUrl) {
@@ -32,6 +32,11 @@ const callApi = async (endpoint, method, queryParams, payload, testUrl) => {
     requestOptions.body = JSON.stringify(payload);
   }
 
+  if (token) {
+    requestOptions.headers['Authorization'] = `Bearer ${token}`;
+
+  }
+
   try {
     const response = await fetch(fullUrl, requestOptions);
     const data = await response.json();
@@ -46,15 +51,6 @@ const callApi = async (endpoint, method, queryParams, payload, testUrl) => {
     throw error;
   }
 
-  //return fetch(fullUrl, requestOptions)
-  //  .then(response => response.json().then(json => ({json, response})))
-  //  .then(({json, response}) => {
-  //    if (!response.ok) {
-  //      //throw json; // аналогично строке ниже
-  //      return Promise.reject(json);
-  //    }
-  //    return json;
-  //  })
 }
 
 export const CALL_API = Symbol('Call API');
@@ -68,8 +64,10 @@ const api = store => next => async action => {
 
   }
 
-  let { endpoint  } = callAPI;
+  let { endpoint } = callAPI;
   const { payload, method, types, testUrl, queryParams} = callAPI;
+
+  const token = localStorage.jwtToken;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -104,7 +102,7 @@ const api = store => next => async action => {
   }));
 
   try {
-    const response = await callApi(endpoint, method, queryParams, payload, testUrl);
+    const response = await callApi(endpoint, method, token, queryParams, payload, testUrl);
     return next(actionWith({
       type: successType,
       response,

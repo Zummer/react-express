@@ -1,9 +1,9 @@
 import auth from './auth';
+import signup from './signup';
 import flashMessages from './flashMessages';
-import login from './login';
 
 export default {
   auth,
-  flashMessages,
-  login
+  signup,
+  flashMessages
 };

@@ -1,94 +1,76 @@
+import jwt from 'jsonwebtoken';
+import isEmpty from 'lodash/isEmpty';
 import {
-  SIGNUP_REQUEST,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAILURE,
-  USER_EXISTS_REQUEST,
-  USER_EXISTS_SUCCESS,
-  USER_EXISTS_FAILURE,
-  SET_SIGNUP_STATE
-} from '../actions/signupActions';
-
-import {CALL_API} from '../middleware/api';
+  SET_LOGIN_STATE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  SET_CURRENT_USER
+} from 'actions';
 
 const initialState = {
+  user: null,
   isFetching: false,
+  isAuthenticated: false,
+  statusText: null,
   errors: {},
   data: {
-    username: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    timezone: ''
+    identifier: '',
+    password: ''
   }
-}
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
       // ----------------------------------------------------------------
-    case USER_EXISTS_REQUEST:
+    case LOGIN_REQUEST:
       return {
         ...state,
-        isFetching: true
-      }
-    case USER_EXISTS_SUCCESS:
-      const errors = {...state.errors};
-
-      if (action.response && action.response.user) {
-        const field = action[CALL_API].field;
-
-        let message;
-
-        switch (field) {
-          case 'username':
-            message = 'Уже есть пользователь с таким именем';
-            break;
-          case 'email':
-            message = 'Уже есть пользователь с такой почтой';
-            break;
-          default:
-            message = `Пользователь с таким ${field} уже существует`;
-
-        }
-
-        errors[field] = message;
-      }
-
-      return {
-        ...state,
-        isFetching: false,
-        errors
-      }
-    case USER_EXISTS_FAILURE:
-      return {
-        isFetching: false,
-        errors: action.error
-      }
-      // ----------------------------------------------------------------
-    case SIGNUP_REQUEST:
-      return {
-        ...state,
+        statusText: null,
         errors: {},
         isFetching: true
       }
-    case SIGNUP_SUCCESS:
+    case LOGIN_SUCCESS: {
+      const {token} = action.response;
+      const user = jwt.decode(token);
       return {
         ...state,
-        isFetching: false
+        isFetching: false,
+        isAuthenticated: !isEmpty(user),
+        user,
+        statusText: 'You have been successfully logged in.'
       }
-    case SIGNUP_FAILURE:
+    }
+    case LOGIN_FAILURE:
       return {
         ...state,
         errors: action.error,
-        isFetching: false
+        isFetching: false,
+        user: null,
+        statusText: `Authentication Error: ${action.type}`
       };
       // ----------------------------------------------------------------
-    case SET_SIGNUP_STATE:
+    case SET_LOGIN_STATE:
       return {
         ...state,
         ...action.payload
       };
       // ----------------------------------------------------------------
+    case SET_CURRENT_USER: {
+      const {token} = action;
+      const user = jwt.decode(token);
+
+      return {
+        ...state,
+        isFetching: false,
+        isAuthenticated: !isEmpty(user),
+        user,
+        statusText: 'You have been successfully logged in.'
+      }
+    }
+      // ----------------------------------------------------------------
     default:
       return state;
+
   }
 }

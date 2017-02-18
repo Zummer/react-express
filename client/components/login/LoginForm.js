@@ -103,9 +103,9 @@ LoginForm.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-  errors: state.login.errors,
-  data: state.login.data,
-  isFetching: state.login.isFetching
+  errors: state.auth.errors,
+  data: state.auth.data,
+  isFetching: state.auth.isFetching
 });
 
 export default withRouter(connect(

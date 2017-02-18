@@ -10,7 +10,9 @@ export {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  login,
   SET_LOGIN_STATE,
   setLoginState,
-  login
+  SET_CURRENT_USER,
+  setCurrentUser
 } from './authActions';

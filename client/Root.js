@@ -7,15 +7,22 @@ import api from './middleware/api';
 import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from './rootReducer';
 import logger from 'redux-logger';
+import {setCurrentUser} from 'actions';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
     rootReducer,
   composeEnhancers(
     applyMiddleware(thunk, api ,logger())
-  
+
   )
 );
+
+const {dispatch} = store;
+const authToken = localStorage.getItem('jwtToken');
+if (authToken) {
+  dispatch(setCurrentUser(authToken));
+}
 
 export default class Root extends React.Component {
   render() {

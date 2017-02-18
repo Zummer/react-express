@@ -40,7 +40,7 @@ export const SET_SIGNUP_STATE = 'SET_SIGNUP_STATE';
 
 export const setSignUpState = data => (dispatch, getState) => {
 
-  const state = getState().auth;
+  const state = getState().signup;
 
   dispatch({
     type: SET_SIGNUP_STATE,

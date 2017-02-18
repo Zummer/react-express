@@ -16,6 +16,9 @@ router.post('/', async (req, res) => {
     }).fetch();
 
     if (user && bcrypt.compareSync(password, user.get('password_diggest'))) {
+
+      console.log(user.get('id'));
+
       const token = jwt.sign({
         id: user.get('id'),
         username: user.get('username')
