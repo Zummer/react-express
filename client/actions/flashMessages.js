@@ -1,5 +1,4 @@
 import {ADD_FLASH_MESSAGE, DELETE_FLASH_MESSAGE} from '../constants';
-import shortid from 'shortid';
 
 export const addFlashMessage = message => ({
   type: ADD_FLASH_MESSAGE,
