@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import isEmpty from 'lodash/isEmpty';
 import {
   SET_LOGIN_STATE,
@@ -55,17 +54,14 @@ export default (state = initialState, action) => {
     }
       // ----------------------------------------------------------------
     case SET_CURRENT_USER: {
-      const {token} = action;
-      const user = jwt.decode(token);
-
+      const {user} = action;
       return {
         ...state,
         isAuthenticated: !isEmpty(user),
         user,
-        statusText: !isEmpty(user) ?
-        'You have been successfully logged in.' :
-        'You have been successfully logged out.'
+        statusText: `You have been successfully logged ${!isEmpty(user) ? `in.` : `out.`}`
       }
+
     }
       // ----------------------------------------------------------------
     default: {

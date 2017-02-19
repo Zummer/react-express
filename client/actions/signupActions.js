@@ -23,7 +23,7 @@ export const USER_EXISTS_REQUEST = 'USER_EXISTS_REQUEST';
 export const USER_EXISTS_SUCCESS = 'USER_EXISTS_SUCCESS';
 export const USER_EXISTS_FAILURE = 'USER_EXISTS_FAILURE';
 
-export const isUserExists = (field, identifier) => (dispatch, getState) =>
+export const checkUserExists = (field, identifier) => (dispatch, getState) =>
   dispatch({
     [CALL_API]: {
       types: [USER_EXISTS_REQUEST, USER_EXISTS_SUCCESS, USER_EXISTS_FAILURE],

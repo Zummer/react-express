@@ -1,4 +1,5 @@
 import {CALL_API} from '../middleware/api';
+import jwt from 'jsonwebtoken';
 
 export const SET_LOGIN_STATE = 'SET_LOGIN_STATE';
 
@@ -25,6 +26,7 @@ export const login = data => async (dispatch, getState) => {
     const action = await dispatch({
       [CALL_API]: {
         types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
+        pes: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
         method: 'POST',
         endpoint: 'auth',
         payload: data
@@ -52,8 +54,20 @@ export const logout = () => dispatch => {
 
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
-export const setCurrentUser = token => ({
-  type: SET_CURRENT_USER,
-  token
-});
+export const setCurrentUser = token => (dispatch, getState) => {
+  let user = null;
+  try {
+    user = jwt.decode(token);
+    if(!user) {
+      localStorage.removeItem('jwtToken');
+    }
 
+  } catch (e) {
+    console.log(e);
+  }
+
+  dispatch({
+    type: SET_CURRENT_USER,
+    user
+  });
+}

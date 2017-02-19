@@ -14,7 +14,7 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
   userSignupRequest,
-  isUserExists,
+  checkUserExists,
   setSignUpState
 } from '../../actions/signupActions';
 
@@ -25,7 +25,7 @@ const SignupForm = ({
   router,
   setSignUpState,
   userSignupRequest,
-  isUserExists,
+  checkUserExists,
   addFlashMessage
 }) => {
   const onChange = (e) => {
@@ -40,11 +40,11 @@ const SignupForm = ({
     });
   }
 
-  const checkUserExists = (e) => {
+  const handleCheckUserExists = (e) => {
     const field = e.target.name;
     const val = e.target.value;
     if (val !== '') {
-      isUserExists(field, val);
+      checkUserExists(field, val);
     }
   }
 
@@ -97,7 +97,7 @@ const SignupForm = ({
         label="Username"
         name="username"
         onChange={onChange}
-        onBlur={checkUserExists}
+        onBlur={handleCheckUserExists}
         value={data.username}
         error={errors.username}
       />
@@ -106,7 +106,7 @@ const SignupForm = ({
       label="Email"
       name="email"
       onChange={onChange}
-      onBlur={checkUserExists}
+      onBlur={handleCheckUserExists}
       value={data.email}
       error={errors.email}
     />
@@ -166,7 +166,7 @@ SignupForm.propTypes = {
   router: React.PropTypes.object.isRequired,
   setSignUpState: React.PropTypes.func.isRequired,
   userSignupRequest: React.PropTypes.func.isRequired,
-  isUserExists: React.PropTypes.func.isRequired,
+  checkUserExists: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired
 }
 
@@ -181,7 +181,7 @@ export default withRouter(connect(
   {
     userSignupRequest,
     addFlashMessage,
-    isUserExists,
+    checkUserExists,
     setSignUpState
   }
 )(SignupForm));
