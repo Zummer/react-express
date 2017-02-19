@@ -6,6 +6,17 @@ import config from '../config';
 
 let router = express.Router();
 
+class InvalidCredError extends Error {
+  constructor(message) {
+    super(); // (A)
+    this.name = 'InvalidCredError';
+    this.message = message;
+    Error.captureStackTrace(this, InvalidCredError); // added
+
+  }
+
+}
+
 router.post('/', async (req, res) => {
   const {identifier, password} = req.body;
 
@@ -22,13 +33,15 @@ router.post('/', async (req, res) => {
       }, config.jwtSecret);
       res.json({token});
     } else {
-      res.status(401).json({
-        message: 'Invalid Credentials'
-      });
-
+      throw new InvalidCredError('Invalid Credentials');
     }
   } catch (e) {
-    console.log(e);
+    console.log({name: e.name, message: e.message});
+    if (e instanceof InvalidCredError) {
+      res.status(401).json(e);
+    } else {
+      res.status(500).json(e);
+    }
   }
 
 

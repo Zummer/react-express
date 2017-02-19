@@ -42,7 +42,10 @@ export const login = data => async (dispatch, getState) => {
     return action;
 
   } catch (error) {
-    console.log(error);
+    throw error;
+
+  } finally {
+
   }
 
 }
@@ -61,16 +64,16 @@ export const setCurrentUser = token => (dispatch, getState) => {
     if(!user) {
       localStorage.removeItem('jwtToken');
     }
-
   } catch (e) {
     const token = localStorage.jwtToken;
     console.log(e);
     console.log('current token was', token);
     localStorage.removeItem('jwtToken');
+  } finally {
+    dispatch({
+      type: SET_CURRENT_USER,
+      user
+    });
   }
 
-  dispatch({
-    type: SET_CURRENT_USER,
-    user
-  });
 }
