@@ -17,3 +17,13 @@ export {
   setCurrentUser,
   logout
 } from './authActions';
+
+export {
+  CREATE_EVENT_REQUEST,
+  CREAT_EVENT_SUCCESS,
+  CREATE_EVENT_FAILURE,
+  SET_EVENT_STATE,
+  createEvent,
+  setEventState
+} from './eventActions';
+

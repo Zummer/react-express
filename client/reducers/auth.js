@@ -23,25 +23,21 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
       // ----------------------------------------------------------------
-    case LOGIN_REQUEST:
+    case LOGIN_REQUEST: {
       return {
         ...state,
         statusText: null,
         errors: {},
         isFetching: true
       }
+    }
     case LOGIN_SUCCESS: {
-      //const {token} = action.response;
-      //const user = jwt.decode(token);
       return {
         ...state,
         isFetching: false,
-        //isAuthenticated: !isEmpty(user),
-        //user,
-        //statusText: 'You have been successfully logged in.'
       }
     }
-    case LOGIN_FAILURE:
+    case LOGIN_FAILURE: {
       return {
         ...state,
         errors: action.error,
@@ -49,12 +45,14 @@ export default (state = initialState, action) => {
         user: null,
         statusText: `Authentication Error: ${action.type}`
       };
+    }
       // ----------------------------------------------------------------
-    case SET_LOGIN_STATE:
+    case SET_LOGIN_STATE: {
       return {
         ...state,
         ...action.payload
       };
+    }
       // ----------------------------------------------------------------
     case SET_CURRENT_USER: {
       const {token} = action;
@@ -65,13 +63,14 @@ export default (state = initialState, action) => {
         isAuthenticated: !isEmpty(user),
         user,
         statusText: !isEmpty(user) ?
-          'You have been successfully logged in.' :
-          'You have been successfully logged out.'
+        'You have been successfully logged in.' :
+        'You have been successfully logged out.'
       }
     }
       // ----------------------------------------------------------------
-    default:
+    default: {
       return state;
 
+    }
   }
 }

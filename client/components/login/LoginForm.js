@@ -53,8 +53,6 @@ const LoginForm = ({
     });
   }
 
-  // console.log(router);
-
   return (
     <form onSubmit={onSubmit}>
       <h1>Login</h1>
