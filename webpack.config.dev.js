@@ -42,10 +42,5 @@ export default {
       validations: 'server/shared/validations'
     },
     extentions: [ '', '.js'  ]
-  },
-  node: {
-    net: 'empty',
-    dns: 'empty'
   }
-
 }

@@ -1,5 +1,5 @@
 import {CALL_API} from '../middleware/api';
-import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 
 export const SET_LOGIN_STATE = 'SET_LOGIN_STATE';
 
@@ -57,13 +57,16 @@ export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const setCurrentUser = token => (dispatch, getState) => {
   let user = null;
   try {
-    user = jwt.decode(token);
+    user = jwtDecode(token);
     if(!user) {
       localStorage.removeItem('jwtToken');
     }
 
   } catch (e) {
+    const token = localStorage.jwtToken;
     console.log(e);
+    console.log('current token was', token);
+    localStorage.removeItem('jwtToken');
   }
 
   dispatch({

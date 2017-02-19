@@ -38,6 +38,7 @@
     "expect": "^1.20.2",
     "express": "^4.14.0",
     "jsonwebtoken": "^7.3.0",
+    "jwt-decode": "^2.1.0",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "nock": "^9.0.2",
